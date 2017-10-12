@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "995795392884",
+    "firebase_url": "https://lycitybot.firebaseio.com",
+    "project_id": "lycitybot",
+    "storage_bucket": "lycitybot.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:995795392884:android:d5a3f85a1d2072cf",
+        "android_client_info": {
+          "package_name": "com.example.wasike.lycitybot"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "995795392884-2c4tjdk9um86ho1t2kgsh5ki9291svod.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.wasike.lycitybot",
+            "certificate_hash": "91f67450d813f14cdb65845b2fc95cf51463aeda"
+          }
+        },
+        {
+          "client_id": "995795392884-v57ntaj97kb4dppr54hbq1601si5ghg0.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDYYTXn3qCaAzj35cH9qU914UwSllwwji8"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "995795392884-v57ntaj97kb4dppr54hbq1601si5ghg0.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
