@@ -1,12 +1,12 @@
 package com.example.wasike.lycitybot;
 
 import android.content.Intent;
-import android.icu.text.DateFormat;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
+import android.text.format.DateFormat;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -18,6 +18,7 @@ import android.widget.Toast;
 
 import com.firebase.ui.auth.AuthUI;
 import com.firebase.ui.database.FirebaseListAdapter;
+import com.github.library.bubbleview.BubbleTextView;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
@@ -28,7 +29,7 @@ public class MainActivity extends AppCompatActivity {
 
     private static int SIGN_IN_REQUEST_CODE = 1;
     private FirebaseListAdapter<ChatMessage> adapter;
-    RelativeLayout activty_main;
+    RelativeLayout activity_main;
     FloatingActionButton fab;
 
 
@@ -38,16 +39,25 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        activty_main = (RelativeLayout) findViewById(R.id.activity_main);
+        activity_main = (RelativeLayout) findViewById(R.id.activity_main);
         fab = (FloatingActionButton) findViewById(R.id.fab);
 
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 EditText input = (EditText) findViewById(R.id.input);
-                FirebaseDatabase.getInstance().getReference().push().setValue(new ChatMessage(input.getText().toString(),
-                        FirebaseAuth.getInstance().getCurrentUser().getEmail()));
-                input.setText("");
+                String message = input.getText().toString();
+
+                if (!message.equals("")) {
+                    FirebaseDatabase.getInstance().getReference().push().setValue(new ChatMessage(message,
+                            FirebaseAuth.getInstance().getCurrentUser().getEmail()));
+                    input.setText("");
+                }
+
+                //Clear message when send
+                BubbleTextView bubbleTextView = (BubbleTextView) findViewById(R.id.message_text);
+                bubbleTextView.setText("");
+
             }
         });
 
@@ -55,7 +65,7 @@ public class MainActivity extends AppCompatActivity {
         if(FirebaseAuth.getInstance().getCurrentUser() == null) {
             startActivityForResult(AuthUI.getInstance().createSignInIntentBuilder().build(), SIGN_IN_REQUEST_CODE );
         } else {
-            Snackbar.make(activty_main, "Welcome" + FirebaseAuth.getInstance().getCurrentUser().getEmail(), Snackbar.LENGTH_SHORT)
+            Snackbar.make(activity_main, "Welcome" + FirebaseAuth.getInstance().getCurrentUser().getEmail(), Snackbar.LENGTH_SHORT)
                     .show();
         }
 
@@ -71,7 +81,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             protected void populateView(View v, ChatMessage model, int position) {
                 //Get references to the views of list_item.xml
-                TextView messageText = (TextView)v.findViewById(R.id.message_text);
+                TextView messageText = (BubbleTextView)v.findViewById(R.id.message_text);
                 TextView messageUser = (TextView)v.findViewById(R.id.message_user);
                 TextView messageTime = (TextView)v.findViewById(R.id.message_time);
 
@@ -81,7 +91,7 @@ public class MainActivity extends AppCompatActivity {
 
                 //Format te data before showing it
 
-                messageTime.setText("date here");
+                messageTime.setText(DateFormat.format("dd-mm-yyyy (HH:mm:ss)",model.getMessageTime()));
             }
         };
         listOfMessages.setAdapter(adapter);
@@ -94,11 +104,11 @@ public class MainActivity extends AppCompatActivity {
         if (requestCode == SIGN_IN_REQUEST_CODE) {
 
             if(resultCode == RESULT_OK) {
-                Snackbar.make(activty_main, "Successfully signed in. Welcome!", Snackbar.LENGTH_SHORT)
+                Snackbar.make(activity_main, "Successfully signed in. Welcome!", Snackbar.LENGTH_SHORT)
                         .show();
                 displayChatMessage();
             } else {
-                Snackbar.make(activty_main, "We couldn't sign in. Please try again later.", Snackbar.LENGTH_SHORT)
+                Snackbar.make(activity_main, "We couldn't sign in. Please try again later.", Snackbar.LENGTH_SHORT)
                         .show();
                 finish();
             }
