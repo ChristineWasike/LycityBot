@@ -2,10 +2,6 @@ package com.example.wasike.lycitybot;
 
 import java.util.Date;
 
-/**
- * Created by wasike on 11/10/17.
- */
-
 public class ChatMessage {
 
 
