@@ -1,4 +1,4 @@
-package com.example.wasike.lycitybot;
+package com.example.wasike.lycitybot.models;
 
 import java.util.Date;
 

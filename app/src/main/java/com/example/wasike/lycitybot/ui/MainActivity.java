@@ -1,4 +1,4 @@
-package com.example.wasike.lycitybot;
+package com.example.wasike.lycitybot.ui;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -16,6 +16,9 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.wasike.lycitybot.Constants;
+import com.example.wasike.lycitybot.R;
+import com.example.wasike.lycitybot.models.ChatMessage;
 import com.firebase.ui.auth.AuthUI;
 import com.firebase.ui.database.FirebaseListAdapter;
 import com.github.library.bubbleview.BubbleTextView;
@@ -27,7 +30,6 @@ import com.google.firebase.database.FirebaseDatabase;
 public class MainActivity extends AppCompatActivity {
 
 
-    private static int SIGN_IN_REQUEST_CODE = 1;
     private FirebaseListAdapter<ChatMessage> adapter;
     RelativeLayout activity_main;
     FloatingActionButton fab;
@@ -48,7 +50,7 @@ public class MainActivity extends AppCompatActivity {
                 EditText input = (EditText) findViewById(R.id.input);
                 String message = input.getText().toString();
 
-                if (!message.equals("")) {
+                if (!message.equals("")) { // If statement ensures a message doesn't go blank
                     FirebaseDatabase.getInstance().getReference().push().setValue(new ChatMessage(message,
                             FirebaseAuth.getInstance().getCurrentUser().getEmail()));
                     input.setText("");
@@ -59,11 +61,12 @@ public class MainActivity extends AppCompatActivity {
                 bubbleTextView.setText("");
 
             }
+            // End of onClick
         });
 
         //check if not signed in then navigate to SignIn Page
         if(FirebaseAuth.getInstance().getCurrentUser() == null) {
-            startActivityForResult(AuthUI.getInstance().createSignInIntentBuilder().build(), SIGN_IN_REQUEST_CODE );
+            startActivityForResult(AuthUI.getInstance().createSignInIntentBuilder().build(), Constants.SIGN_IN_REQUEST_CODE );
         } else {
             Snackbar.make(activity_main, "Welcome" + FirebaseAuth.getInstance().getCurrentUser().getEmail(), Snackbar.LENGTH_SHORT)
                     .show();
@@ -82,8 +85,8 @@ public class MainActivity extends AppCompatActivity {
             protected void populateView(View v, ChatMessage model, int position) {
                 //Get references to the views of list_item.xml
                 TextView messageText = (BubbleTextView)v.findViewById(R.id.message_text);
-                TextView messageUser = (TextView)v.findViewById(R.id.message_user);
-                TextView messageTime = (TextView)v.findViewById(R.id.message_time);
+                TextView messageUser = v.findViewById(R.id.message_user);
+                TextView messageTime = v.findViewById(R.id.message_time);
 
                 //Set their text
                 messageText.setText(model.getMessageText());
@@ -101,7 +104,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        if (requestCode == SIGN_IN_REQUEST_CODE) {
+        if (requestCode == Constants.SIGN_IN_REQUEST_CODE) {
 
             if(resultCode == RESULT_OK) {
                 Snackbar.make(activity_main, "Successfully signed in. Welcome!", Snackbar.LENGTH_SHORT)
