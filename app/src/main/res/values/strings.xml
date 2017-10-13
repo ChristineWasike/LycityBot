@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">LycityBot</string>
+    <string name="date">dd-MM-yyyy (HH:mm:ss)</string>
 </resources>
