@@ -35,12 +35,15 @@ import com.ibm.watson.developer_cloud.conversation.v1.model.MessageRequest;
 import com.ibm.watson.developer_cloud.conversation.v1.model.MessageResponse;
 import com.ibm.watson.developer_cloud.http.ServiceCallback;
 
+import butterknife.Bind;
+import butterknife.ButterKnife;
+
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
     private FirebaseListAdapter<ChatMessage> adapter;
-    RelativeLayout activity_main;
-    FloatingActionButton fab;
-    EditText userInput;
-    BubbleTextView chatText; // Setting text
+    @Bind(R.id.activity_main) RelativeLayout mActivityMain;
+    @Bind(R.id.fab) FloatingActionButton fab;
+    @Bind(R.id.input) EditText userInput;
+    @Bind(R.id.list_of_messages) ListView messageListView;
 
 
 
@@ -48,55 +51,15 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        ButterKnife.bind(this);
 
-        activity_main = (RelativeLayout) findViewById(R.id.activity_main);
-        fab = (FloatingActionButton) findViewById(R.id.fab);
-        userInput = (EditText) findViewById(R.id.input); // Takes input from the user.
-        chatText = (BubbleTextView) findViewById(R.id.message_text);
-
-        // Listener for the done button in the edit text.
-//        userInput.setOnEditorActionListener(new TextView.OnEditorActionListener() {
-//            @Override
-//            public boolean onEditorAction(TextView textView, int i, KeyEvent keyEvent) {
-//                if (i == EditorInfo.IME_ACTION_DONE) {
-//                    // Displaying the messages of the bot
-//                    final String inputText = userInput.getText().toString();
-//                    chatText.append(Html.fromHtml("<p><b>You:</b> " + inputText + "</p>"));
-//                    userInput.setText("");
-//                    // Building a request
-//                    MessageRequest request = new MessageRequest.Builder()
-//                            .inputText(inputText)
-//                            .build();
-//                    final WatsonService watsonService = new WatsonService();
-//                    watsonService.watsonConversationService.message(Constants.BLUEMIX_WORK_SPACEID, request)
-//                            .enqueue(new ServiceCallback<MessageResponse>() {
-//                                @Override
-//                                public void onResponse(MessageResponse response) {
-//                                    final String outputText = response.getText().get(0);
-//                                    runOnUiThread(new Runnable() {
-//                                        @Override
-//                                        public void run() {
-//                                            chatText.append(Html.fromHtml("<p><b>Lexy:</b> " + outputText + "</p>"));
-//                                        }
-//                                    });
-//                                }
-//
-//                                @Override
-//                                public void onFailure(Exception e) {
-//
-//                                }
-//                            });
-//                }
-//                return false;
-//            }
-//        });
         fab.setOnClickListener(this);
 
         //check if not signed in then navigate to SignIn Page
         if(FirebaseAuth.getInstance().getCurrentUser() == null) {
             startActivityForResult(AuthUI.getInstance().createSignInIntentBuilder().build(), Constants.SIGN_IN_REQUEST_CODE );
         } else {
-            Snackbar.make(activity_main, "Welcome" + FirebaseAuth.getInstance().getCurrentUser().getEmail(), Snackbar.LENGTH_SHORT)
+            Snackbar.make(mActivityMain, "Welcome" + FirebaseAuth.getInstance().getCurrentUser().getEmail(), Snackbar.LENGTH_SHORT)
                     .show();
         }
 
@@ -136,11 +99,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         if (requestCode == Constants.SIGN_IN_REQUEST_CODE) {
 
             if(resultCode == RESULT_OK) {
-                Snackbar.make(activity_main, "Successfully signed in. Welcome!", Snackbar.LENGTH_SHORT)
+                Snackbar.make(mActivityMain, "Successfully signed in. Welcome!", Snackbar.LENGTH_SHORT)
                         .show();
                 displayChatMessage();
             } else {
-                Snackbar.make(activity_main, "We couldn't sign in. Please try again later.", Snackbar.LENGTH_SHORT)
+                Snackbar.make(mActivityMain, "We couldn't sign in. Please try again later.", Snackbar.LENGTH_SHORT)
                         .show();
                 finish();
             }
@@ -173,29 +136,19 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     @Override
     public void onClick(View view) {
-        EditText input = (EditText) findViewById(R.id.input);
-        String message = input.getText().toString();
+//        EditText input = (EditText) findViewById(R.id.input);
+        String message = userInput.getText().toString();
 
         if (!message.equals("")) { // If statement ensures a message doesn't go blank
             FirebaseDatabase.getInstance().getReference().push().setValue(new ChatMessage(message,
                     FirebaseAuth.getInstance().getCurrentUser().getEmail()));
             watsonConversation(message); // Method to call on the Watson Service
-            input.setText("");
+            userInput.setText("");
         }
 
         //Clear message when send
-        BubbleTextView bubbleTextView = (BubbleTextView) findViewById(R.id.message_text);
-        bubbleTextView.setText("");
-//        if (view == fab) {
-//            // Displaying the messages of the bot
-//            final String inputText = userInput.getText().toString();
-//            final TextView messageText = (BubbleTextView) findViewById(R.id.message_text);
-//            messageText.setText(Html.fromHtml("<p><b>You:</b> " + inputText + "</p>"));
-////            chatText.setText(inputText);
-//            userInput.setText("");
-//            // Building a request
-//        }
-
+//        BubbleTextView bubbleTextView = (BubbleTextView) findViewById(R.id.message_text);
+//        chatText.setText("");
     }
 
     /** Watson Service method which sends the message
@@ -215,7 +168,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
-                                messageText.setText(Html.fromHtml("<p><b>Lexy:</b> " + outputText + "</p>"));
+//                                messageText.setText(Html.fromHtml("<p><b>Lexy:</b> " + outputText + "</p>"));
+                                messageText.setText(outputText);
                             }
                         });
                     }
