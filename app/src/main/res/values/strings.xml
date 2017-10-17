@@ -1,4 +1,9 @@
 <resources>
     <string name="app_name">LycityBot</string>
     <string name="date">dd-MM-yyyy (HH:mm:ss)</string>
+    <string name="message">Message</string>
+    <string name="email">somerandom@gmail.com</string>
+    <string name="type_a_message">Type a message</string>
+    <string name="greeting">Hey there LycityBot</string>
+    <string name="time">The time now is</string>
 </resources>

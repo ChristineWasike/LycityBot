@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     tools:context="com.example.wasike.lycitybot.ui.MainActivity"
     android:id="@+id/activity_main"
-    android:background="@android:color/white">
+    android:background="@color/colorTextIcons">
 
     <android.support.design.widget.FloatingActionButton
         android:layout_width="wrap_content"
@@ -14,9 +14,9 @@
         android:clickable="true"
         android:src="@drawable/ic_send"
         android:id="@+id/fab"
-        android:tint="@android:color/white"
         android:layout_alignParentBottom="true"
         android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
         app:fabSize="mini"/>
 
 
@@ -24,12 +24,15 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_toLeftOf="@+id/fab"
+        android:layout_toStartOf="@+id/fab"
         android:layout_alignParentBottom="true">
 
         <EditText
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Message"
+            android:textColor="@color/colorTextIcons"
+            android:hint="@string/message"
+            android:textColorHint="@color/colorDivider"
             android:id="@+id/input"/>
 
     </android.support.design.widget.TextInputLayout>
