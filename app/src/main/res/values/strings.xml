@@ -6,4 +6,7 @@
     <string name="type_a_message">Type a message</string>
     <string name="greeting">Hey there LycityBot</string>
     <string name="time">The time now is</string>
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="sign_out">Sign Out</string>
 </resources>
