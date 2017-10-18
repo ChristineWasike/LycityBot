@@ -15,7 +15,7 @@ android {
         it.buildConfigField 'String', 'BLUEMIX_USER_NAME', UserName
         it.buildConfigField 'String', 'BLUEMIX_PASSWORD', Password
         it.buildConfigField 'String', 'BLUEMIX_WORK_SPACE_ID', WorkSpaceId
-        it.buildConfigField 'String', '', GeniusApiKey
+        it.buildConfigField 'String', 'GENIUS_API_KEY', GeniusApiKey
     }
     buildTypes {
         release {
