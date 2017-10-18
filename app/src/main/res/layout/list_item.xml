@@ -57,10 +57,4 @@
                 android:text="@string/time"/>
         </RelativeLayout>
     </LinearLayout>
-
-
-
-
-
-
 </LinearLayout>

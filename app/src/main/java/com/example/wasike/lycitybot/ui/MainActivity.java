@@ -40,12 +40,11 @@ import butterknife.ButterKnife;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
     private FirebaseListAdapter<ChatMessage> adapter;
+    private ChatMessage chatMessage;
     @Bind(R.id.activity_main) RelativeLayout mActivityMain;
     @Bind(R.id.fab) FloatingActionButton fab;
     @Bind(R.id.input) EditText userInput;
     @Bind(R.id.list_of_messages) ListView messageListView;
-
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -69,8 +68,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     private void displayChatMessage() {
-        ListView listOfMessages = (ListView) findViewById(R.id.list_of_messages);
-
         adapter = new FirebaseListAdapter<ChatMessage>(this, ChatMessage.class,
                 R.layout.list_item, FirebaseDatabase.getInstance().getReference()) {
             @Override
@@ -79,17 +76,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 TextView messageText = (BubbleTextView)v.findViewById(R.id.message_text); // The actual message sent
                 TextView messageUser = v.findViewById(R.id.message_user);
                 TextView messageTime = v.findViewById(R.id.message_time);
-
                 //Set their text
                 messageText.setText(model.getMessageText());
                 messageUser.setText(model.getMessageUser());
-
                 //Format te data before showing it
-
-                messageTime.setText(DateFormat.format("dd-mm-yyyy (HH:mm:ss)",model.getMessageTime()));
+                messageTime.setText(DateFormat.format("dd-mm-yyyy (hh:mm)",model.getMessageTime()));
             }
         };
-        listOfMessages.setAdapter(adapter);
+        messageListView.setAdapter(adapter);
     }
 
     @Override
@@ -113,12 +107,20 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.main_menu, menu);
-        return true;
+        if (FirebaseAuth.getInstance().getCurrentUser() == null) {
+            MenuItem item = menu.findItem(R.id.menu_sign_out);
+            item.setVisible(false);
+        } else {
+            MenuItem item = menu.findItem(R.id.menu_sign_in);
+            item.setVisible(false);
+        }
+        return super.onCreateOptionsMenu(menu);
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        if (item.getItemId() == R.id.menu_sign_out){
+        int id = item.getItemId();
+        if (id == R.id.menu_sign_out){
             AuthUI.getInstance().signOut(this).
                     addOnCompleteListener(new OnCompleteListener<Void>() {
                 @Override
@@ -129,19 +131,22 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     finish();
                 }
             });
+        }
+        if (id == R.id.menu_sign_in) {
 
         }
-        return true;
+        return super.onOptionsItemSelected(item);
     }
 
     @Override
     public void onClick(View view) {
 //        EditText input = (EditText) findViewById(R.id.input);
         String message = userInput.getText().toString();
+        boolean isSend = true;
 
         if (!message.equals("")) { // If statement ensures a message doesn't go blank
             FirebaseDatabase.getInstance().getReference().push().setValue(new ChatMessage(message,
-                    FirebaseAuth.getInstance().getCurrentUser().getEmail()));
+                    FirebaseAuth.getInstance().getCurrentUser().getEmail(), isSend));
             watsonConversation(message); // Method to call on the Watson Service
             userInput.setText("");
         }
@@ -154,30 +159,34 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     /** Watson Service method which sends the message
      * to the Watson AI(Lexy) */
     private void watsonConversation(String conversation) {
-        MessageRequest request = new MessageRequest.Builder()
-                .inputText(conversation)
-                .build();
-        final WatsonService watsonService = new WatsonService();
-        final TextView messageText = (BubbleTextView) findViewById(R.id.message_text);
-        watsonService.watsonConversationService.message(Constants.BLUEMIX_WORK_SPACEID, request)
-                .enqueue(new ServiceCallback<MessageResponse>() {
-                    @Override
-                    public void onResponse(MessageResponse response) {
-                        final String outputText = response.getText().get(0);
-                        Log.d("Bot:", String.valueOf(outputText));
-                        runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-//                                messageText.setText(Html.fromHtml("<p><b>Lexy:</b> " + outputText + "</p>"));
-                                messageText.setText(outputText);
-                            }
-                        });
-                    }
+        if (!conversation.equals("")) {
+            MessageRequest request = new MessageRequest.Builder()
+                    .inputText(conversation)
+                    .build();
+            final WatsonService watsonService = new WatsonService();
+            final TextView messageText = (BubbleTextView) findViewById(R.id.message_text);
+            watsonService.watsonConversationService.message(Constants.BLUEMIX_WORK_SPACEID, request)
+                    .enqueue(new ServiceCallback<MessageResponse>() {
+                        @Override
+                        public void onResponse(MessageResponse response) {
+                            final String outputText = response.getText().get(0);
+                            /* Code to store the response on Firebase */
+                            FirebaseDatabase.getInstance().getReference().push().setValue(new ChatMessage(outputText,
+                                    FirebaseAuth.getInstance().getCurrentUser().getEmail(), false));
+                            Log.d("Bot:", String.valueOf(outputText));
+                            runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    messageText.setText(outputText);
+                                }
+                            });
+                        }
 
-                    @Override
-                    public void onFailure(Exception e) {
+                        @Override
+                        public void onFailure(Exception e) {
 
-                    }
-                });
+                        }
+                    });
+        }
     }
 }
