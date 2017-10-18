@@ -24,19 +24,23 @@
     <android.support.design.widget.TextInputLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/colorPrimary"
         android:layout_toLeftOf="@+id/fab"
         android:layout_toStartOf="@+id/fab"
         android:padding="0dp"
-        android:layout_alignParentBottom="true">
+        android:layout_marginBottom="6dp"
+        android:layout_alignParentBottom="true"
+        android:background="@drawable/rounded_edittext">
 
         <EditText
+            android:layout_gravity="center"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textColor="@color/colorTextIcons"
+            android:paddingLeft="5dp"
             android:hint="@string/message"
             android:textColorHint="@color/colorDivider"
-            android:id="@+id/input"/>
+            android:id="@+id/input"
+            android:background="@drawable/rounded_edittext"/>
 
     </android.support.design.widget.TextInputLayout>
 

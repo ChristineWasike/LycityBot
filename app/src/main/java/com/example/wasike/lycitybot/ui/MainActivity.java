@@ -22,6 +22,7 @@ import android.widget.Toast;
 
 import com.example.wasike.lycitybot.Constants;
 import com.example.wasike.lycitybot.R;
+import com.example.wasike.lycitybot.adapters.MessageAdapter;
 import com.example.wasike.lycitybot.models.ChatMessage;
 import com.example.wasike.lycitybot.services.WatsonService;
 import com.firebase.ui.auth.AuthUI;
@@ -30,10 +31,15 @@ import com.github.library.bubbleview.BubbleTextView;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
 import com.ibm.watson.developer_cloud.conversation.v1.model.MessageRequest;
 import com.ibm.watson.developer_cloud.conversation.v1.model.MessageResponse;
 import com.ibm.watson.developer_cloud.http.ServiceCallback;
+
+import org.parceler.Parcels;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -41,6 +47,8 @@ import butterknife.ButterKnife;
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
     private FirebaseListAdapter<ChatMessage> adapter;
     private ChatMessage chatMessage;
+    private MessageAdapter messageAdapter;
+    private FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
     @Bind(R.id.activity_main) RelativeLayout mActivityMain;
     @Bind(R.id.fab) FloatingActionButton fab;
     @Bind(R.id.input) EditText userInput;
@@ -68,22 +76,29 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     private void displayChatMessage() {
-        adapter = new FirebaseListAdapter<ChatMessage>(this, ChatMessage.class,
-                R.layout.list_item, FirebaseDatabase.getInstance().getReference()) {
-            @Override
-            protected void populateView(View v, ChatMessage model, int position) {
-                //Get references to the views of list_item.xml
-                TextView messageText = (BubbleTextView)v.findViewById(R.id.message_text); // The actual message sent
-                TextView messageUser = v.findViewById(R.id.message_user);
-                TextView messageTime = v.findViewById(R.id.message_time);
-                //Set their text
-                messageText.setText(model.getMessageText());
-                messageUser.setText(model.getMessageUser());
-                //Format te data before showing it
-                messageTime.setText(DateFormat.format("dd-mm-yyyy (hh:mm)",model.getMessageTime()));
-            }
-        };
-        messageListView.setAdapter(adapter);
+        String uid = user.getUid();
+        Query query = FirebaseDatabase
+                .getInstance()
+                .getReference(Constants.FIREBASE_CHILD_CHAT)
+                .child(uid);
+
+        messageAdapter = new MessageAdapter(MainActivity.this, ChatMessage.class, R.layout.list_item, query, this);
+//        adapter = new FirebaseListAdapter<ChatMessage>(this, ChatMessage.class,
+//                R.layout.list_item, FirebaseDatabase.getInstance().getReference()) {
+//            @Override
+//            protected void populateView(View v, ChatMessage model, int position) {
+//                    //Get references to the views of list_item.xml
+//                    TextView messageText = (BubbleTextView)v.findViewById(R.id.message_text); // The actual message sent
+//                    TextView messageUser = v.findViewById(R.id.message_user);
+//                    TextView messageTime = v.findViewById(R.id.message_time);
+//                    //Set their text
+//                    messageText.setText(model.getMessageText());
+//                    messageUser.setText(model.getMessageUser());
+//                    //Format te data before showing it
+//                    messageTime.setText(DateFormat.format("dd-mm-yyyy (hh:mm)",model.getMessageTime()));
+//            }
+//        };
+        messageListView.setAdapter(messageAdapter);
     }
 
     @Override
@@ -142,11 +157,23 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public void onClick(View view) {
 //        EditText input = (EditText) findViewById(R.id.input);
         String message = userInput.getText().toString();
-        boolean isSend = true;
-
         if (!message.equals("")) { // If statement ensures a message doesn't go blank
+            FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+//            if (user != null) {
+//                String uid = user.getUid();
+//                DatabaseReference chatRef = FirebaseDatabase
+//                        .getInstance()
+//                        .getReference(Constants.FIREBASE_CHILD_CHAT)
+//                        .child(uid);
+//                DatabaseReference pushRef = chatRef.push();
+//                String pushId = pushRef.getKey();
+//                chatMessage.setPushId(pushId);
+//                pushRef.setValue(chatMessage);
+//                chatMessage.setSend(true);
+//            }
             FirebaseDatabase.getInstance().getReference().push().setValue(new ChatMessage(message,
-                    FirebaseAuth.getInstance().getCurrentUser().getEmail(), isSend));
+                    FirebaseAuth.getInstance().getCurrentUser().getEmail()));
+            chatMessage.setSend(true);
             watsonConversation(message); // Method to call on the Watson Service
             userInput.setText("");
         }
@@ -172,7 +199,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                             final String outputText = response.getText().get(0);
                             /* Code to store the response on Firebase */
                             FirebaseDatabase.getInstance().getReference().push().setValue(new ChatMessage(outputText,
-                                    FirebaseAuth.getInstance().getCurrentUser().getEmail(), false));
+                                    FirebaseAuth.getInstance().getCurrentUser().getEmail()));
+                            chatMessage.setSend(false);
                             Log.d("Bot:", String.valueOf(outputText));
                             runOnUiThread(new Runnable() {
                                 @Override
@@ -184,7 +212,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
                         @Override
                         public void onFailure(Exception e) {
-
+                            Toast.makeText(MainActivity.this, "Unable to connect to Lexy", Toast.LENGTH_SHORT).show();
                         }
                     });
         }

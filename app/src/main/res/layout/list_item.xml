@@ -25,7 +25,6 @@
             android:text="@string/email"/>
 
         <com.github.library.bubbleview.BubbleTextView
-            android:hint="@string/type_a_message"
             android:textColor="@color/colorTextIcons"
             android:id="@+id/message_text"
             android:layout_marginTop="5dp"

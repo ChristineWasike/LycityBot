@@ -9,11 +9,11 @@ public class ChatMessage {
     private String messageUser;
     private long messageTime;
     private boolean isSend;
+    private String pushId;
 
-    public ChatMessage(String messageText, String messageUser, boolean isSend) {
+    public ChatMessage(String messageText, String messageUser) {
         this.messageText = messageText;
         this.messageUser = messageUser;
-        this.isSend = isSend;
         messageTime = new Date().getTime();
     }
 
@@ -23,31 +23,27 @@ public class ChatMessage {
         return messageText;
     }
 
-    public void setMessageText(String messageText) {
-        this.messageText = messageText;
-    }
-
     public String getMessageUser() {
         return messageUser;
-    }
-
-    public boolean isSend() {
-        return isSend;
-    }
-
-    public void setMessageUser(String messageUser) {
-        this.messageUser = messageUser;
     }
 
     public long getMessageTime() {
         return messageTime;
     }
 
-    public void setMessageTime(long messageTime) {
-        this.messageTime = messageTime;
+    public boolean isSend() {
+        return isSend;
     }
 
     public void setSend(boolean send) {
-        isSend = send;
+        this.isSend = send;
+    }
+
+    public String getPushId() {
+        return pushId;
+    }
+
+    public void setPushId(String pushId) {
+        this.pushId = pushId;
     }
 }
