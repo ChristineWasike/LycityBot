@@ -61,7 +61,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         ButterKnife.bind(this);
 
         fab.setOnClickListener(this);
-
         //check if not signed in then navigate to SignIn Page
         if(FirebaseAuth.getInstance().getCurrentUser() == null) {
             startActivityForResult(AuthUI.getInstance().createSignInIntentBuilder().build(), Constants.SIGN_IN_REQUEST_CODE );
@@ -69,7 +68,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             Snackbar.make(mActivityMain, "Welcome" + FirebaseAuth.getInstance().getCurrentUser().getEmail(), Snackbar.LENGTH_SHORT)
                     .show();
         }
-
         //Load content
         displayChatMessage();
         // End of onCreate()
@@ -81,23 +79,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 .getInstance()
                 .getReference(Constants.FIREBASE_CHILD_CHAT)
                 .child(uid);
-
+        /* MessageAdapter is the custom adapter which makes it easier to set the ListView*/
         messageAdapter = new MessageAdapter(MainActivity.this, ChatMessage.class, R.layout.list_item, query, this);
-//        adapter = new FirebaseListAdapter<ChatMessage>(this, ChatMessage.class,
-//                R.layout.list_item, FirebaseDatabase.getInstance().getReference()) {
-//            @Override
-//            protected void populateView(View v, ChatMessage model, int position) {
-//                    //Get references to the views of list_item.xml
-//                    TextView messageText = (BubbleTextView)v.findViewById(R.id.message_text); // The actual message sent
-//                    TextView messageUser = v.findViewById(R.id.message_user);
-//                    TextView messageTime = v.findViewById(R.id.message_time);
-//                    //Set their text
-//                    messageText.setText(model.getMessageText());
-//                    messageUser.setText(model.getMessageUser());
-//                    //Format te data before showing it
-//                    messageTime.setText(DateFormat.format("dd-mm-yyyy (hh:mm)",model.getMessageTime()));
-//            }
-//        };
         messageListView.setAdapter(messageAdapter);
     }
 
@@ -171,16 +154,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 mChatMessage.setSend(true);
                 pushRef.setValue(mChatMessage);
             }
-//            FirebaseDatabase.getInstance().getReference().push().setValue(new ChatMessage(message,
-//                    FirebaseAuth.getInstance().getCurrentUser().getEmail()));
-//            chatMessage.setSend(true);
             watsonConversation(message); // Method to call on the Watson Service
             userInput.setText("");
         }
-
-        //Clear message when send
-//        BubbleTextView bubbleTextView = (BubbleTextView) findViewById(R.id.message_text);
-//        chatText.setText("");
     }
 
     /** Watson Service method which sends the message
@@ -192,16 +168,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     .build();
             final WatsonService watsonService = new WatsonService();
             final TextView messageText = (BubbleTextView) findViewById(R.id.message_text);
-            final TextView messageUser = (TextView) findViewById(R.id.message_user);
             watsonService.watsonConversationService.message(Constants.BLUEMIX_WORK_SPACEID, request)
                     .enqueue(new ServiceCallback<MessageResponse>() {
                         @Override
                         public void onResponse(MessageResponse response) {
                             final String outputText = response.getText().get(0);
                             /* Code to store the response on Firebase */
-//                            FirebaseDatabase.getInstance().getReference().push().setValue(new ChatMessage(outputText,
-//                                    FirebaseAuth.getInstance().getCurrentUser().getEmail()));
-                            ChatMessage mChatMessage = new ChatMessage(outputText, "Lexy");
+                            ChatMessage mChatMessage = new ChatMessage(outputText, "Lexy"); // Instantiating the model in order to store details onto Firebase.
                             String uid = user.getUid();
                             DatabaseReference chatRef = FirebaseDatabase
                                     .getInstance()
