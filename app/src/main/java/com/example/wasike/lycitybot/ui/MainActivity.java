@@ -155,25 +155,25 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     @Override
     public void onClick(View view) {
-//        EditText input = (EditText) findViewById(R.id.input);
         String message = userInput.getText().toString();
         if (!message.equals("")) { // If statement ensures a message doesn't go blank
             FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-//            if (user != null) {
-//                String uid = user.getUid();
-//                DatabaseReference chatRef = FirebaseDatabase
-//                        .getInstance()
-//                        .getReference(Constants.FIREBASE_CHILD_CHAT)
-//                        .child(uid);
-//                DatabaseReference pushRef = chatRef.push();
-//                String pushId = pushRef.getKey();
-//                chatMessage.setPushId(pushId);
-//                pushRef.setValue(chatMessage);
-//                chatMessage.setSend(true);
-//            }
-            FirebaseDatabase.getInstance().getReference().push().setValue(new ChatMessage(message,
-                    FirebaseAuth.getInstance().getCurrentUser().getEmail()));
-            chatMessage.setSend(true);
+            if (user != null) {
+                ChatMessage mChatMessage = new ChatMessage(message, String.valueOf(user.getEmail()));
+                String uid = user.getUid();
+                DatabaseReference chatRef = FirebaseDatabase
+                        .getInstance()
+                        .getReference(Constants.FIREBASE_CHILD_CHAT)
+                        .child(uid);
+                DatabaseReference pushRef = chatRef.push();
+                String pushId = pushRef.getKey();
+                mChatMessage.setPushId(pushId);
+                mChatMessage.setSend(true);
+                pushRef.setValue(mChatMessage);
+            }
+//            FirebaseDatabase.getInstance().getReference().push().setValue(new ChatMessage(message,
+//                    FirebaseAuth.getInstance().getCurrentUser().getEmail()));
+//            chatMessage.setSend(true);
             watsonConversation(message); // Method to call on the Watson Service
             userInput.setText("");
         }
@@ -192,15 +192,26 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     .build();
             final WatsonService watsonService = new WatsonService();
             final TextView messageText = (BubbleTextView) findViewById(R.id.message_text);
+            final TextView messageUser = (TextView) findViewById(R.id.message_user);
             watsonService.watsonConversationService.message(Constants.BLUEMIX_WORK_SPACEID, request)
                     .enqueue(new ServiceCallback<MessageResponse>() {
                         @Override
                         public void onResponse(MessageResponse response) {
                             final String outputText = response.getText().get(0);
                             /* Code to store the response on Firebase */
-                            FirebaseDatabase.getInstance().getReference().push().setValue(new ChatMessage(outputText,
-                                    FirebaseAuth.getInstance().getCurrentUser().getEmail()));
-                            chatMessage.setSend(false);
+//                            FirebaseDatabase.getInstance().getReference().push().setValue(new ChatMessage(outputText,
+//                                    FirebaseAuth.getInstance().getCurrentUser().getEmail()));
+                            ChatMessage mChatMessage = new ChatMessage(outputText, "Lexy");
+                            String uid = user.getUid();
+                            DatabaseReference chatRef = FirebaseDatabase
+                                    .getInstance()
+                                    .getReference(Constants.FIREBASE_CHILD_CHAT)
+                                    .child(uid);
+                            DatabaseReference pushRef = chatRef.push();
+                            String pushId = pushRef.getKey();
+                            mChatMessage.setPushId(pushId);
+                            mChatMessage.setSend(false);
+                            pushRef.setValue(mChatMessage);
                             Log.d("Bot:", String.valueOf(outputText));
                             runOnUiThread(new Runnable() {
                                 @Override
@@ -212,7 +223,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
                         @Override
                         public void onFailure(Exception e) {
-                            Toast.makeText(MainActivity.this, "Unable to connect to Lexy", Toast.LENGTH_SHORT).show();
+
                         }
                     });
         }
