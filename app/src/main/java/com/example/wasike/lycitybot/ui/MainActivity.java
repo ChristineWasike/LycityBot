@@ -1,6 +1,7 @@
 package com.example.wasike.lycitybot.ui;
 
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
@@ -161,6 +162,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
     }
 
+    //Method that prevent the activity fro changing upon change in orientation of screen
+    /*No worries already solved it */
+
+
     /** Watson Service method which sends the message
      * to the Watson AI(Lexy) */
     private void watsonConversation(String conversation) {
@@ -171,36 +176,36 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             final WatsonService watsonService = new WatsonService();
             final TextView messageText = (BubbleTextView) findViewById(R.id.message_text);
             watsonService.watsonConversationService.message(Constants.BLUEMIX_WORK_SPACEID, request)
-                    .enqueue(new ServiceCallback<MessageResponse>() {
+            .enqueue(new ServiceCallback<MessageResponse>() {
+                @Override
+                public void onResponse(MessageResponse response) {
+                    final String outputText = response.getText().get(0);
+                    /* Code to store the response on Firebase */
+                    ChatMessage mChatMessage = new ChatMessage(outputText, "Lexy"); // Instantiating the model in order to store details onto Firebase.
+                    String uid = user.getUid();
+                    DatabaseReference chatRef = FirebaseDatabase
+                            .getInstance()
+                            .getReference(Constants.FIREBASE_CHILD_CHAT)
+                            .child(uid);
+                    DatabaseReference pushRef = chatRef.push();
+                    String pushId = pushRef.getKey();
+                    mChatMessage.setPushId(pushId);
+                    mChatMessage.setSend(false);
+                    pushRef.setValue(mChatMessage);
+                    Log.d("Bot:", String.valueOf(outputText));
+                    runOnUiThread(new Runnable() {
                         @Override
-                        public void onResponse(MessageResponse response) {
-                            final String outputText = response.getText().get(0);
-                            /* Code to store the response on Firebase */
-                            ChatMessage mChatMessage = new ChatMessage(outputText, "Lexy"); // Instantiating the model in order to store details onto Firebase.
-                            String uid = user.getUid();
-                            DatabaseReference chatRef = FirebaseDatabase
-                                    .getInstance()
-                                    .getReference(Constants.FIREBASE_CHILD_CHAT)
-                                    .child(uid);
-                            DatabaseReference pushRef = chatRef.push();
-                            String pushId = pushRef.getKey();
-                            mChatMessage.setPushId(pushId);
-                            mChatMessage.setSend(false);
-                            pushRef.setValue(mChatMessage);
-                            Log.d("Bot:", String.valueOf(outputText));
-                            runOnUiThread(new Runnable() {
-                                @Override
-                                public void run() {
-                                    messageText.setText(outputText);
-                                }
-                            });
-                        }
-
-                        @Override
-                        public void onFailure(Exception e) {
-
+                        public void run() {
+                            messageText.setText(outputText);
                         }
                     });
+                }
+
+                @Override
+                public void onFailure(Exception e) {
+
+                }
+            });
         }
     }
 }
