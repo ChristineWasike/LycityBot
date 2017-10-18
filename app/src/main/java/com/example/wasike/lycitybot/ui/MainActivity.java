@@ -66,6 +66,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         //Load content
         displayChatMessage();
         // End of onCreate()
+
+
     }
 
     private void displayChatMessage() {
