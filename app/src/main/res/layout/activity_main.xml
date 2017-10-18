@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     tools:context="com.example.wasike.lycitybot.ui.MainActivity"
     android:id="@+id/activity_main"
-    android:background="@color/colorTextIcons">
+    android:background="@color/colorPrimaryDark">
 
     <android.support.design.widget.FloatingActionButton
         android:layout_width="wrap_content"
@@ -14,31 +14,39 @@
         android:clickable="true"
         android:src="@drawable/ic_send"
         android:id="@+id/fab"
+        android:layout_marginRight="5dp"
+        android:layout_marginEnd="5dp"
         android:layout_alignParentBottom="true"
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true"
         app:fabSize="mini"/>
-
 
     <android.support.design.widget.TextInputLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_toLeftOf="@+id/fab"
         android:layout_toStartOf="@+id/fab"
-        android:layout_alignParentBottom="true">
+        android:padding="0dp"
+        android:layout_marginBottom="6dp"
+        android:layout_alignParentBottom="true"
+        android:background="@drawable/rounded_edittext">
 
         <EditText
+            android:layout_gravity="center"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textColor="@color/colorTextIcons"
+            android:paddingLeft="5dp"
             android:hint="@string/message"
             android:textColorHint="@color/colorDivider"
-            android:id="@+id/input"/>
+            android:id="@+id/input"
+            android:background="@drawable/rounded_edittext"/>
 
     </android.support.design.widget.TextInputLayout>
 
     <ListView
         android:layout_width="match_parent"
+        android:background="@color/colorPrimaryDark"
         android:layout_height="match_parent"
         android:id="@+id/list_of_messages"
         android:layout_alignParentTop="true"
