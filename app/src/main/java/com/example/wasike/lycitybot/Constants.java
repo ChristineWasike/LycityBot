@@ -18,5 +18,8 @@ public class Constants {
     //Query for the request to song information based on the user's need
     public static final String GENIUS_QUERY_PARAMETER = "q";
 
+    //Store the lyrics in the user's phone
+    public static final String PREFERENCE_SONG_KEY = "song";
+
 
 }
