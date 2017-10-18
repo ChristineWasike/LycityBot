@@ -15,6 +15,48 @@ public class Genius {
 
     public Genius(String songTitle, String lyricsUrl, String artistName, String imageThumbnail){
         this.songTitle = songTitle;
-        thi
+        this.lyricsUrl = lyricsUrl;
+        this.artistName = artistName;
+        this.imageThumbnail = imageThumbnail;
+    }
+
+    public String getSongTitle() {
+        return songTitle;
+    }
+
+    public void setSongTitle(String songTitle) {
+        this.songTitle = songTitle;
+    }
+
+    public String getLyricsUrl() {
+        return lyricsUrl;
+    }
+
+    public void setLyricsUrl(String lyricsUrl) {
+        this.lyricsUrl = lyricsUrl;
+    }
+
+    public String getArtistName() {
+        return artistName;
+    }
+
+    public void setArtistName(String artistName) {
+        this.artistName = artistName;
+    }
+
+    public String getPushId() {
+        return pushId;
+    }
+
+    public void setPushId(String pushId) {
+        this.pushId = pushId;
+    }
+
+    public String getImageThumbnail() {
+        return imageThumbnail;
+    }
+
+    public void setImageThumbnail(String imageThumbnail) {
+        this.imageThumbnail = imageThumbnail;
     }
 }
