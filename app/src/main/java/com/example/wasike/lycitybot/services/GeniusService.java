@@ -4,16 +4,24 @@ import android.app.Service;
 import android.content.Intent;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
+import android.util.Log;
 
 import com.example.wasike.lycitybot.Constants;
 import com.example.wasike.lycitybot.models.Genius;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.IOException;
+import java.util.ArrayList;
+
+import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.HttpUrl;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
 
-/**
- * Created by wasike on 18/10/17.
- */
 
 public class GeniusService  {
     //declared the genius model in the service
@@ -27,5 +35,38 @@ public class GeniusService  {
 
         urlBuilder.addQueryParameter(Constants.GENIUS_QUERY_PARAMETER, song);
 
+        String url = urlBuilder.build().toString();
+
+        OkHttpClient client = new OkHttpClient();
+
+        Request request = new Request.Builder()
+                .header("Authorization", Constants.GENIUS_API_KEY)
+                .url(url)
+                .build();
+
+        Log.v("Information", url);
+
+        Call call = client.newCall(request);
+        call.enqueue(callback);
+
+    }
+
+    //Receives the response from the API
+    public ArrayList<Genius> processResults(Response response){
+        ArrayList<Genius> songs = new ArrayList<>();
+
+        try{
+            String jsonData = response.body().toString();
+            if(response.isSuccessful()) {
+                JSONObject geniusJSON = new JSONObject(jsonData);
+                JSONObject responseJSON = geniusJSON.getJSONObject("response");
+                Log.v("jsonData", jsonData);
+
+            }
+
+        } catch(JSONException e) {
+            e.printStackTrace();
+        }
+        return songs;
     }
 }
