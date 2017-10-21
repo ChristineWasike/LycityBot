@@ -9,6 +9,7 @@ import android.util.Log;
 import com.example.wasike.lycitybot.Constants;
 import com.example.wasike.lycitybot.models.Genius;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -61,6 +62,18 @@ public class GeniusService  {
                 JSONObject geniusJSON = new JSONObject(jsonData);
                 JSONObject responseJSON = geniusJSON.getJSONObject("response");
                 Log.v("jsonData", jsonData);
+
+                JSONArray songJsonObject = responseJSON.getJSONArray("hits");
+                for (int i = 0; 1 < songJsonObject.length(); i++){
+                    JSONObject hitsJSON = songJsonObject.getJSONObject(1);
+                    String songTitle = hitsJSON.getString("type");
+                    String lyricsUrl = hitsJSON.getJSONObject("result").getString("url");
+                    String artistName = hitsJSON.getJSONObject("result").getJSONObject("primary_artist").getString("name");
+                    String imageThumbnail = hitsJSON.getJSONObject("result").getString("header_image_url");
+
+                    Genius genius = new Genius(songTitle, lyricsUrl, artistName, imageThumbnail);
+                    songs.add(genius);
+                }
 
             }
 
