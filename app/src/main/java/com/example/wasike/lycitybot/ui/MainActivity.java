@@ -25,6 +25,8 @@ import com.example.wasike.lycitybot.Constants;
 import com.example.wasike.lycitybot.R;
 import com.example.wasike.lycitybot.adapters.MessageAdapter;
 import com.example.wasike.lycitybot.models.ChatMessage;
+import com.example.wasike.lycitybot.models.Genius;
+import com.example.wasike.lycitybot.services.GeniusService;
 import com.example.wasike.lycitybot.services.WatsonService;
 import com.firebase.ui.auth.AuthUI;
 import com.firebase.ui.database.FirebaseListAdapter;
@@ -42,10 +44,17 @@ import com.ibm.watson.developer_cloud.http.ServiceCallback;
 
 import org.parceler.Parcels;
 
+import java.io.IOException;
+
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import okhttp3.Call;
+import okhttp3.Callback;
+import okhttp3.Response;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
+    //song model
+    private Genius mGenius;
     private FirebaseListAdapter<ChatMessage> adapter;
     private ChatMessage chatMessage;
     private MessageAdapter messageAdapter;
@@ -73,8 +82,32 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         displayChatMessage();
         // End of onCreate()
 
+        //getting the text from the user to attach to the API endpoint in order to make request
+        String specSong = userInput.getText().toString();
+
+        //calling method responsible from getting the song in conjunction with the genius service
+//        getSong(specSong);
 
     }
+
+    //method declared in my song service responsible for retrieving information from the genius API
+//    private void getSong(String title) {
+//        final GeniusService geniusService = new GeniusService();
+//
+//        geniusService.findSongInfo(title, new Callback() {
+//            @Override
+//            public void onFailure(Call call, IOException e) {
+//                e.printStackTrace();
+//            }
+//
+//            //method runs on a new thread.
+//            //if a response is received the following method will run on the UI thread once again
+//            @Override
+//            public void onResponse(Call call, Response response) throws IOException {
+//                mGenius = geniusService.processResults(response).get(0);
+//            }
+//        });
+//    }
 
     private void displayChatMessage() {
         String uid = user.getUid();
