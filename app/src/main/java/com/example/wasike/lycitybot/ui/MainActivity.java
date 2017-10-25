@@ -30,6 +30,7 @@ import com.example.wasike.lycitybot.services.GeniusService;
 import com.example.wasike.lycitybot.services.WatsonService;
 import com.firebase.ui.auth.AuthUI;
 import com.firebase.ui.database.FirebaseListAdapter;
+import com.github.kittinunf.fuel.Fuel;
 import com.github.library.bubbleview.BubbleTextView;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -45,6 +46,7 @@ import com.ibm.watson.developer_cloud.http.ServiceCallback;
 import org.parceler.Parcels;
 
 import java.io.IOException;
+import java.util.ArrayList;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -52,17 +54,24 @@ import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.Response;
 
+import static android.media.CamcorderProfile.get;
+
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
     //song model
-    private Genius mGenius;
+//    private Genius mGenius;
     private FirebaseListAdapter<ChatMessage> adapter;
     private ChatMessage chatMessage;
     private MessageAdapter messageAdapter;
     private FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+    public ArrayList<Genius> mGenius = new ArrayList<>();
+    int search = 0;
+
+
     @Bind(R.id.activity_main) RelativeLayout mActivityMain;
     @Bind(R.id.fab) FloatingActionButton fab;
     @Bind(R.id.input) EditText userInput;
     @Bind(R.id.list_of_messages) ListView messageListView;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -83,31 +92,29 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         // End of onCreate()
 
         //getting the text from the user to attach to the API endpoint in order to make request
-        String specSong = userInput.getText().toString();
 
-        //calling method responsible from getting the song in conjunction with the genius service
-//        getSong(specSong);
 
     }
 
     //method declared in my song service responsible for retrieving information from the genius API
-//    private void getSong(String title) {
-//        final GeniusService geniusService = new GeniusService();
-//
-//        geniusService.findSongInfo(title, new Callback() {
-//            @Override
-//            public void onFailure(Call call, IOException e) {
-//                e.printStackTrace();
-//            }
-//
-//            //method runs on a new thread.
-//            //if a response is received the following method will run on the UI thread once again
-//            @Override
-//            public void onResponse(Call call, Response response) throws IOException {
-//                mGenius = geniusService.processResults(response).get(0);
-//            }
-//        });
-//    }
+    private void getSong(String specSong) {
+        final GeniusService geniusService = new GeniusService();
+
+        geniusService.findSongInfo(specSong, new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+                e.printStackTrace();
+            }
+
+            //method runs on a new thread.
+            //if a response is received the following method will run on the UI thread once again
+            @Override
+            public void onResponse(Call call, Response response) {
+                mGenius = geniusService.processResults(response);
+
+            }
+        });
+    }
 
     private void displayChatMessage() {
         String uid = user.getUid();
@@ -177,6 +184,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         String message = userInput.getText().toString();
         if (!message.equals("")) { // If statement ensures a message doesn't go blank
             FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+            //calling method responsible from getting the song in conjunction with the genius service
+            getSong(message);
             if (user != null) {
                 ChatMessage mChatMessage = new ChatMessage(message, String.valueOf(user.getEmail()));
                 String uid = user.getUid();
@@ -190,7 +199,20 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 mChatMessage.setSend(true);
                 pushRef.setValue(mChatMessage);
             }
-            watsonConversation(message); // Method to call on the Watson Service
+            if(search>2){
+                final TextView messageText = (BubbleTextView) findViewById(R.id.message_text);
+
+                getSong(message);
+                //setText with new response
+
+                //messageText.setText(geniusResponse)
+                messageText.setText(mGenius.get(0).getArtistName());
+                search=0;
+                Log.v("artist", mGenius.get(0).getArtistName());
+            }else{
+                watsonConversation(message); // Method to call on the Watson Service
+            }
+
             userInput.setText("");
         }
     }
@@ -201,7 +223,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     /** Watson Service method which sends the message
      * to the Watson AI(Lexy) */
-    private void watsonConversation(String conversation) {
+    private void watsonConversation(final String conversation) {
         if (!conversation.equals("")) {
             MessageRequest request = new MessageRequest.Builder()
                     .inputText(conversation)
@@ -214,24 +236,41 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 public void onResponse(MessageResponse response) {
                     final String outputText = response.getText().get(0);
                     /* Code to store the response on Firebase */
-                    ChatMessage mChatMessage = new ChatMessage(outputText, "Lexy"); // Instantiating the model in order to store details onto Firebase.
+                    final   ChatMessage mChatMessage = new ChatMessage(outputText, "Lexy"); // Instantiating the model in order to store details onto Firebase.
                     String uid = user.getUid();
                     DatabaseReference chatRef = FirebaseDatabase
                             .getInstance()
                             .getReference(Constants.FIREBASE_CHILD_CHAT)
                             .child(uid);
-                    DatabaseReference pushRef = chatRef.push();
+                    final DatabaseReference pushRef = chatRef.push();
                     String pushId = pushRef.getKey();
                     mChatMessage.setPushId(pushId);
                     mChatMessage.setSend(false);
-                    pushRef.setValue(mChatMessage);
+
                     Log.d("Bot:", String.valueOf(outputText));
+
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            messageText.setText(outputText);
+                            if (outputText.contains("search") || search>0){
+                                Log.v("search", "has search:"+Integer.toString(search));
+                                search += 1;
+                            }else {
+                                search=0;
+                            }
+                            if (search ==2){
+                                String message = userInput.getText().toString();
+                                getSong(message);
+                                String name = mGenius.get(0).getArtistName();
+                                ChatMessage message1 = new ChatMessage(name, "Lexy");
+                                pushRef.setValue(message1);
+                                mGenius.clear();
+                            }else{
+                                pushRef.setValue(mChatMessage);
+                            }
                         }
                     });
+
                 }
 
                 @Override
