@@ -29,16 +29,15 @@ public class GeniusService  {
     private static Genius mGenius;
 
     //Creating a method responsible for making the requests to the Genius API
-    public static void findSongInfo(String song, Callback callback) {
+    public static void findSongInfo(String specSong, Callback callback) {
+        OkHttpClient client = new OkHttpClient();
 
         //Constructing the url to be sent
         HttpUrl.Builder urlBuilder = HttpUrl.parse(Constants.GENIUS_BASE_URL).newBuilder();
 
-        urlBuilder.addQueryParameter(Constants.GENIUS_QUERY_PARAMETER, song);
+        urlBuilder.addQueryParameter(Constants.GENIUS_QUERY_PARAMETER, specSong);
 
         String url = urlBuilder.build().toString();
-
-        OkHttpClient client = new OkHttpClient();
 
         Request request = new Request.Builder()
                 .header("Authorization", Constants.GENIUS_API_KEY)
@@ -57,27 +56,32 @@ public class GeniusService  {
         ArrayList<Genius> songs = new ArrayList<>();
 
         try{
-            String jsonData = response.body().toString();
+            String jsonData = response.body().string();
+            Log.v("jsonData", jsonData);
             if(response.isSuccessful()) {
                 JSONObject geniusJSON = new JSONObject(jsonData);
                 JSONObject responseJSON = geniusJSON.getJSONObject("response");
-                Log.v("jsonData", jsonData);
+
 
                 JSONArray songJsonObject = responseJSON.getJSONArray("hits");
-                for (int i = 0; 1 < songJsonObject.length(); i++){
-                    JSONObject hitsJSON = songJsonObject.getJSONObject(1);
-                    String songTitle = hitsJSON.getString("type");
+                for (int i = 0; i < songJsonObject.length(); i++){
+                    JSONObject hitsJSON = songJsonObject.getJSONObject(0);
+                    Log.v("hitsJSON", hitsJSON.toString());
+                    String songTitle = hitsJSON.getJSONObject("result").getString("title");
                     String lyricsUrl = hitsJSON.getJSONObject("result").getString("url");
                     String artistName = hitsJSON.getJSONObject("result").getJSONObject("primary_artist").getString("name");
                     String imageThumbnail = hitsJSON.getJSONObject("result").getString("header_image_url");
 
                     Genius genius = new Genius(songTitle, lyricsUrl, artistName, imageThumbnail);
                     songs.add(genius);
+                    break;
                 }
 
             }
 
-        } catch(JSONException e) {
+        }catch (IOException e){
+            e.printStackTrace();
+        }catch(JSONException e) {
             e.printStackTrace();
         }
         return songs;
