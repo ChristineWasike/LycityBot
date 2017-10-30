@@ -33,6 +33,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/greeting"
+            android:textIsSelectable="true"
             android:padding="10dp"
             app:arrowWidth= "8dp"
             app:angle="8dp"
