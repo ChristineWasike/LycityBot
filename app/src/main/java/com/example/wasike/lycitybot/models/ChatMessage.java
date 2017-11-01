@@ -31,7 +31,7 @@ public class ChatMessage {
         return messageTime;
     }
 
-    public boolean isSend() {
+    public boolean getSend() {
         return isSend;
     }
 
