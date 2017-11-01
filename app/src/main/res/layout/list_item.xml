@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="horizontal"
     android:id="@+id/message"
@@ -11,8 +11,9 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:orientation="vertical"
+        android:id="@+id/user"
         android:background="@color/colorPrimaryDark"
         android:weightSum="1">
         <TextView
@@ -23,6 +24,7 @@
             android:textStyle="normal|bold"
             android:background="@color/colorPrimaryDark"
             android:text="@string/email"/>
+
 
         <com.github.library.bubbleview.BubbleTextView
             android:textColor="@color/colorTextIcons"
@@ -56,5 +58,62 @@
                 android:layout_alignParentRight="true"
                 android:text="@string/time"/>
         </RelativeLayout>
+
+
     </LinearLayout>
-</LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:id="@+id/bot"
+        android:layout_height="wrap_content"
+        android:background="@color/colorPrimaryDark"
+        android:orientation="vertical"
+        android:weightSum="1">
+
+        <TextView
+            android:id="@+id/bot_user"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@color/colorPrimaryDark"
+            android:text="@string/email"
+            android:textColor="@color/colorPrimaryLight"
+            android:textStyle="normal|bold"
+            android:layout_gravity="right"/>
+
+        <com.github.library.bubbleview.BubbleTextView
+            android:id="@+id/bot_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="16dp"
+            android:layout_marginTop="5dp"
+            android:padding="10dp"
+            android:text="@string/greeting"
+            android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+            android:textColor="@color/colorTextIcons"
+            android:textIsSelectable="true"
+            android:textSize="18sp"
+            app:angle="8dp"
+            app:arrowCenter="true"
+            app:arrowHeight="10dp"
+            app:arrowLocation="right"
+            app:arrowPosition="14dp"
+            app:arrowWidth="8dp"
+            android:layout_gravity="right"
+            app:bubbleColor="@color/colorAccent" />
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <TextView
+                android:id="@+id/bot_time"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentRight="true"
+                android:text="@string/time"
+                android:textColor="@color/colorPrimaryLight"
+                android:textSize="12sp" />
+        </RelativeLayout>
+    </LinearLayout>
+
+</RelativeLayout>
