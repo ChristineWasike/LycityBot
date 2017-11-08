@@ -20,7 +20,7 @@ import android.widget.TextView;
 
 import com.example.wasike.lycitybot.R;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 
 public class IntroActivity extends AppCompatActivity implements View.OnClickListener{
@@ -28,10 +28,10 @@ public class IntroActivity extends AppCompatActivity implements View.OnClickList
     private int[] layouts;
     private PreferenceManager prefManager;
 
-    @Bind(R.id.viewPager) ViewPager viewPager;
-    @Bind(R.id.layoutDots) LinearLayout dotsLayout;
-    @Bind(R.id.btn_skip) Button btnSkip;
-    @Bind(R.id.btn_next) Button btnNext;
+    @BindView(R.id.viewPager) ViewPager viewPager;
+    @BindView(R.id.layoutDots) LinearLayout dotsLayout;
+    @BindView(R.id.btn_skip) Button btnSkip;
+    @BindView(R.id.btn_next) Button btnNext;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

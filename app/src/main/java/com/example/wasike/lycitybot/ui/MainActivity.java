@@ -2,6 +2,7 @@ package com.example.wasike.lycitybot.ui;
 
 import android.content.Intent;
 import android.content.res.Configuration;
+import android.net.LinkAddress;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
@@ -9,6 +10,7 @@ import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.text.Html;
 import android.text.format.DateFormat;
+import android.text.method.LinkMovementMethod;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.Menu;
@@ -49,7 +51,7 @@ import org.parceler.Parcels;
 import java.io.IOException;
 import java.util.ArrayList;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import okhttp3.Call;
 import okhttp3.Callback;
@@ -68,10 +70,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     int search = 0;
 
 
-    @Bind(R.id.activity_main) RelativeLayout mActivityMain;
-    @Bind(R.id.fab) FloatingActionButton fab;
-    @Bind(R.id.input) EditText userInput;
-    @Bind(R.id.list_of_messages) ListView messageListView;
+    @BindView(R.id.activity_main) RelativeLayout mActivityMain;
+    @BindView(R.id.fab) FloatingActionButton fab;
+    @BindView(R.id.input) EditText userInput;
+    @BindView(R.id.list_of_messages) ListView messageListView;
 
 
     @Override
@@ -200,17 +202,22 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 mChatMessage.setSend(true);
                 pushRef.setValue(mChatMessage);
             }
-            if(search>2){
-                final TextView messageText = (BubbleTextView) findViewById(R.id.message_text);
 
+            final TextView messageText = (BubbleTextView) findViewById(R.id.message_text);
+
+            if(search>2){
                 getSong(message);
                 //setText with new response
 
                 //messageText.setText(geniusResponse)
-                messageText.setText(mGenius.get(0).getArtistName());
+                messageText.setClickable(true);
+                messageText.setMovementMethod(LinkMovementMethod.getInstance());
+                String text = "<a href=mGenius.get(0).getLyricsUrl()>mGenius.get(0).getLyricsUrl()</a>";
+                messageText.setText(Html.fromHtml(text));
                 search=0;
                 Log.v("artist", mGenius.get(0).getArtistName());
             }else{
+                messageText.setText("Sorry, Please type that out again.");
                 watsonConversation(message); // Method to call on the Watson Service
             }
 
@@ -262,7 +269,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                             if (search ==2){
                                 String message = userInput.getText().toString();
                                 getSong(message);
-                                String name = mGenius.get(0).getArtistName();
+                                String name = mGenius.get(0).getLyricsUrl();
                                 ChatMessage message1 = new ChatMessage(name, "Lexy");
                                 pushRef.setValue(message1);
                                 mGenius.clear();

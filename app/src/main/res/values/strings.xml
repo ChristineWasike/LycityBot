@@ -15,12 +15,13 @@
     <string name="skip">SKIP</string>
 
     <string name="start">GOT IT</string>
-    <string name="slide_1_title">Daily Workout</string>
-    <string name="slide_1_desc">Set your daily workout routine by the help of trainer</string>
-    <string name="slide_2_title">Meditation Techniques </string>
-    <string name="slide_2_desc">Learn about the different meditation techniques and practice them</string>
-    <string name="slide_3_title">Diet Chart</string>
-    <string name="slide_3_desc">Make your diet chart by the help of health experts</string>
+    <string name="slide_1_title">LycityBot</string>
+    <string name="slide_1_desc">Introducing LycityBot, a bot that actively interacts with you to provide you with lyrics and information about your favourite songs</string>
+    <string name="slide_2_title">You</string>
+    <string name="slide_2_desc">As the user, you can make small talk with the bot including asking it for lyrics to songs</string>
+    <string name="slide_3_title">LycityBot</string>
+    <string name="slide_3_desc">LycityBot has been programmed to cater for all your lyrical needs. She will do her best to provide you with the most top notch information regarding
+    the songs you look up</string>
     <string name="play_again_desc">To see the welcome slider again, goto Settings -> apps -> welcome slider -> clear data</string>
     <string name="play_again">Play Again</string>
 </resources>
