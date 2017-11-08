@@ -2,7 +2,9 @@ package com.example.wasike.lycitybot.adapters;
 
 import android.app.Activity;
 import android.content.Context;
+import android.text.Html;
 import android.text.format.DateFormat;
+import android.text.method.LinkMovementMethod;
 import android.view.View;
 import android.widget.TextView;
 
@@ -23,16 +25,25 @@ public class MessageAdapter extends FirebaseListAdapter<ChatMessage> {
         mContext = context;
     }
 
+//    public class SongViewHolder extends FirebaseListAdapter.ViewHolder{
+//
+//    }
+
     @Override
     protected void populateView(View v, ChatMessage model, int position) {
         //Get references to the views of list_item.xml
         TextView messageText = (BubbleTextView)v.findViewById(R.id.message_text); // The actual message sent
         TextView messageUser = v.findViewById(R.id.message_user);
         TextView messageTime = v.findViewById(R.id.message_time);
+
+        messageText.setClickable(true);
+        messageText.setMovementMethod(LinkMovementMethod.getInstance());
+//        String text = model.getMessageText();
+//        messageText.setText(Html.fromHtml(text));
         //Set their text
         messageText.setText(model.getMessageText());
         messageUser.setText(model.getMessageUser());
-        //Format te data before showing it
+        //Format the data before showing it
         messageTime.setText(DateFormat.format("dd-mm-yyyy (hh:mm)",model.getMessageTime()));
     }
 }

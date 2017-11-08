@@ -65,7 +65,7 @@ public class GeniusService  {
 
                 JSONArray songJsonObject = responseJSON.getJSONArray("hits");
                 for (int i = 0; i < songJsonObject.length(); i++){
-                    JSONObject hitsJSON = songJsonObject.getJSONObject(0);
+                    JSONObject hitsJSON = songJsonObject.getJSONObject(i);
                     Log.v("hitsJSON", hitsJSON.toString());
                     String songTitle = hitsJSON.getJSONObject("result").getString("title");
                     String lyricsUrl = hitsJSON.getJSONObject("result").getString("url");
