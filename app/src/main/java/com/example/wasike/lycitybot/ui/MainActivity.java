@@ -45,6 +45,7 @@ import com.google.firebase.database.Query;
 import com.ibm.watson.developer_cloud.conversation.v1.model.MessageRequest;
 import com.ibm.watson.developer_cloud.conversation.v1.model.MessageResponse;
 import com.ibm.watson.developer_cloud.http.ServiceCallback;
+import com.squareup.picasso.Picasso;
 
 import org.parceler.Parcels;
 
@@ -269,7 +270,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                             if (search ==2){
                                 String message = userInput.getText().toString();
                                 getSong(message);
-                                String name = mGenius.get(0).getLyricsUrl();
+                                String name = mGenius.get(0).getArtistName() + System.lineSeparator()+ mGenius.get(0).getLyricsUrl();
                                 ChatMessage message1 = new ChatMessage(name, "Lexy");
                                 pushRef.setValue(message1);
                                 mGenius.clear();

@@ -14,6 +14,7 @@ import com.firebase.ui.database.FirebaseListAdapter;
 import com.github.library.bubbleview.BubbleTextView;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.Query;
+import com.squareup.picasso.Picasso;
 
 public class MessageAdapter extends FirebaseListAdapter<ChatMessage> {
     private DatabaseReference mRef;

@@ -8,6 +8,13 @@
     android:id="@+id/activity_main"
     android:background="@color/colorPrimaryDark">
 
+    <ProgressBar
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:indeterminate="true"
+        android:layout_gravity="center"
+        android:layout_centerInParent="true"/>
+
     <android.support.design.widget.FloatingActionButton
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
