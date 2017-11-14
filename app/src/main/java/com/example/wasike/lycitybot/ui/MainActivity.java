@@ -87,7 +87,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         if(FirebaseAuth.getInstance().getCurrentUser() == null) {
             startActivityForResult(AuthUI.getInstance().createSignInIntentBuilder().build(), Constants.SIGN_IN_REQUEST_CODE );
         } else {
-            Snackbar.make(mActivityMain, "Welcome" + FirebaseAuth.getInstance().getCurrentUser().getEmail(), Snackbar.LENGTH_SHORT)
+            Snackbar.make(mActivityMain, "Welcome " + FirebaseAuth.getInstance().getCurrentUser().getEmail(), Snackbar.LENGTH_SHORT)
                     .show();
         }
         //Load content
@@ -120,14 +120,18 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     private void displayChatMessage() {
-        String uid = user.getUid();
-        Query query = FirebaseDatabase
-                .getInstance()
-                .getReference(Constants.FIREBASE_CHILD_CHAT)
-                .child(uid);
+        /* This should stop the application from
+         * crashing after the app intro */
+        if(user != null) {
+            String uid = user.getUid();
+            Query query = FirebaseDatabase
+                    .getInstance()
+                    .getReference(Constants.FIREBASE_CHILD_CHAT)
+                    .child(uid);
         /* MessageAdapter is the custom adapter which makes it easier to set the ListView*/
-        messageAdapter = new MessageAdapter(MainActivity.this, ChatMessage.class, R.layout.list_item, query, this);
-        messageListView.setAdapter(messageAdapter);
+            messageAdapter = new MessageAdapter(MainActivity.this, ChatMessage.class, R.layout.list_item, query, this);
+            messageListView.setAdapter(messageAdapter);
+        }
     }
 
     @Override
@@ -177,7 +181,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             });
         }
         if (id == R.id.menu_sign_in) {
-
+            startActivityForResult(AuthUI.getInstance().createSignInIntentBuilder().build(), Constants.SIGN_IN_REQUEST_CODE );
         }
         return super.onOptionsItemSelected(item);
     }
@@ -217,7 +221,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 search=0;
                 Log.v("artist", mGenius.get(0).getArtistName());
             }else{
-                messageText.setText("Sorry, Please type that out again.");
+                messageText.setText(R.string.try_again);
                 watsonConversation(message); // Method to call on the Watson Service
             }
 

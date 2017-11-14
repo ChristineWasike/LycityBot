@@ -24,4 +24,5 @@
     the songs you look up</string>
     <string name="play_again_desc">To see the welcome slider again, goto Settings -> apps -> welcome slider -> clear data</string>
     <string name="play_again">Play Again</string>
+    <string name="try_again">Sorry, Please type that out again.</string>
 </resources>
