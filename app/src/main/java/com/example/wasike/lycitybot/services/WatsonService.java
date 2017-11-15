@@ -1,6 +1,6 @@
-package com.example.wasike.lycitybot.services;
+package com.wasike.lycitybot.services;
 
-import com.example.wasike.lycitybot.Constants;
+import com.wasike.lycitybot.Constants;
 import com.ibm.watson.developer_cloud.conversation.v1.ConversationService;
 
 public class WatsonService {

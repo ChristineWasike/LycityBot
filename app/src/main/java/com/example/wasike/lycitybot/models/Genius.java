@@ -1,4 +1,4 @@
-package com.example.wasike.lycitybot.models;
+package com.wasike.lycitybot.models;
 
 /**
  * Created by wasike on 18/10/17.

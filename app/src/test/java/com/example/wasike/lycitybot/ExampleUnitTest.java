@@ -1,4 +1,4 @@
-package com.example.wasike.lycitybot;
+package com.wasike.lycitybot;
 
 import org.junit.Test;
 

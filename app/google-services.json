@@ -10,7 +10,7 @@
       "client_info": {
         "mobilesdk_app_id": "1:995795392884:android:d5a3f85a1d2072cf",
         "android_client_info": {
-          "package_name": "com.example.wasike.lycitybot"
+          "package_name": "com.wasike.lycitybot"
         }
       },
       "oauth_client": [
@@ -18,7 +18,7 @@
           "client_id": "995795392884-2c4tjdk9um86ho1t2kgsh5ki9291svod.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
-            "package_name": "com.example.wasike.lycitybot",
+            "package_name": "com.wasike.lycitybot",
             "certificate_hash": "91f67450d813f14cdb65845b2fc95cf51463aeda"
           }
         },

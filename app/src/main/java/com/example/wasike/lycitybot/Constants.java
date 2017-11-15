@@ -1,4 +1,4 @@
-package com.example.wasike.lycitybot;
+package com.wasike.lycitybot;
 
 public class Constants {
 

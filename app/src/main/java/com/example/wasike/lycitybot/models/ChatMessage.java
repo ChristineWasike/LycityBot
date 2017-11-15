@@ -1,4 +1,4 @@
-package com.example.wasike.lycitybot.models;
+package com.wasike.lycitybot.models;
 
 import java.util.Date;
 import org.parceler.Parcel;

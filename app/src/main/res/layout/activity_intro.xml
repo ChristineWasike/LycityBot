@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:showIn="@layout/activity_intro"
-    tools:context="com.example.wasike.lycitybot.ui.IntroActivity">
+    tools:context="com.wasike.lycitybot.ui.IntroActivity">
 
     <android.support.v4.view.ViewPager
         android:id="@+id/viewPager"

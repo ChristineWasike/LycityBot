@@ -1,4 +1,4 @@
-package com.example.wasike.lycitybot.ui;
+package com.wasike.lycitybot.ui;
 
 import android.content.Context;
 import android.content.Intent;
@@ -18,7 +18,7 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.example.wasike.lycitybot.R;
+import com.wasike.lycitybot.R;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;

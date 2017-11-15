@@ -1,4 +1,4 @@
-package com.example.wasike.lycitybot.ui;
+package com.wasike.lycitybot.ui;
 
 import android.content.Intent;
 import android.content.res.Configuration;
@@ -24,13 +24,13 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.wasike.lycitybot.Constants;
-import com.example.wasike.lycitybot.R;
-import com.example.wasike.lycitybot.adapters.MessageAdapter;
-import com.example.wasike.lycitybot.models.ChatMessage;
-import com.example.wasike.lycitybot.models.Genius;
-import com.example.wasike.lycitybot.services.GeniusService;
-import com.example.wasike.lycitybot.services.WatsonService;
+import com.wasike.lycitybot.Constants;
+import com.wasike.lycitybot.R;
+import com.wasike.lycitybot.adapters.MessageAdapter;
+import com.wasike.lycitybot.models.ChatMessage;
+import com.wasike.lycitybot.models.Genius;
+import com.wasike.lycitybot.services.GeniusService;
+import com.wasike.lycitybot.services.WatsonService;
 import com.firebase.ui.auth.AuthUI;
 import com.firebase.ui.database.FirebaseListAdapter;
 import com.github.kittinunf.fuel.Fuel;

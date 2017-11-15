@@ -1,4 +1,4 @@
-package com.example.wasike.lycitybot.adapters;
+package com.wasike.lycitybot.adapters;
 
 import android.app.Activity;
 import android.content.Context;
@@ -8,8 +8,8 @@ import android.text.method.LinkMovementMethod;
 import android.view.View;
 import android.widget.TextView;
 
-import com.example.wasike.lycitybot.R;
-import com.example.wasike.lycitybot.models.ChatMessage;
+import com.wasike.lycitybot.R;
+import com.wasike.lycitybot.models.ChatMessage;
 import com.firebase.ui.database.FirebaseListAdapter;
 import com.github.library.bubbleview.BubbleTextView;
 import com.google.firebase.database.DatabaseReference;
